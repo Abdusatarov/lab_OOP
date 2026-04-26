@@ -1,6 +1,5 @@
 from __future__ import annotations
 from typing import TypeVar, Generic
-import threading
 
 T = TypeVar("T")
 
@@ -27,4 +26,31 @@ class Singleton:
 
 if __name__ == "__main__":
     singleton = Singleton()
+    singleton.print_settings()
 
+class DataRepository(Generic[T]):
+
+    def __init__(self):
+        self.data = []
+
+    def findElement(self, index: int):
+        try:
+            return self.data[index]
+        except IndexError:
+            raise IndexError("Индекс вне диапазона")
+
+    def addSafely(self, item):
+        try:
+            if item is None:
+                raise ValueError
+            self.data.append(item)
+        except ValueError:
+            print("Нельзя добавить None")
+
+repo = DataRepository[int]()   # репозиторий для int
+
+repo.addSafely(10)
+repo.addSafely(20)
+
+print(repo.findElement(1))   # 20
+# print(repo.findElement(5))
